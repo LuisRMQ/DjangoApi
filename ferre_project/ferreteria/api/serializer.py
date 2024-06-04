@@ -1,5 +1,7 @@
 from rest_framework import serializers
 from ferreteria.models import User
+from rest_framework.authtoken.models import Token
+from rest_framework.response import Response 
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -12,7 +14,7 @@ class UserSerializer(serializers.ModelSerializer):
             name=validated_data['name'],
             email=validated_data['email']
         )
-        user.set_password(validated_data['password'])  # Ahora llama al método set_password desde el objeto User
+        user.set_password(validated_data['password'])  
         user.save()
         return user
 
@@ -21,6 +23,6 @@ class UserSerializer(serializers.ModelSerializer):
         instance.email = validated_data.get('email', instance.email)
         password = validated_data.get('password', None)
         if password:
-            instance.set_password(password)  # Igualmente, llama al método set_password desde el objeto User
+            instance.set_password(password)  
         instance.save()
         return instance
