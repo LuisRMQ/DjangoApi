@@ -80,7 +80,7 @@ WSGI_APPLICATION = 'ferre_project.wsgi.application'
 DATABASES = {
      'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'ferreteria',
+        'NAME': 'ferreteriadb',
         'USER': 'postgres',
         'PASSWORD': 'Killers13',
         'HOST': 'localhost',
@@ -132,7 +132,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 
+
 REST_FRAMEWORK = {
+     'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+    ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
       
         'rest_framework_simplejwt.authentication.JWTAuthentication',

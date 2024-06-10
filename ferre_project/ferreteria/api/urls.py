@@ -1,9 +1,8 @@
 from rest_framework.routers import DefaultRouter
 from ferreteria.api.views import UserViewSet
+from django.urls import path, include
 
 
-router = DefaultRouter()
-
-router.register('users',UserViewSet,basename='user')
-
-urlpatterns = router.urls
+urlpatterns = [
+    path('api/', include('ferreteria.api.urls'))
+]

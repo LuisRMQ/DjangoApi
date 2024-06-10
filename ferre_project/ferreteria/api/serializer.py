@@ -1,28 +1,39 @@
 from rest_framework import serializers
 from ferreteria.models import User
+from django.contrib.auth import get_user_model
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response 
+from ferreteria.models import Role
+
+User = get_user_model()
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = '__all__'
-        extra_kwargs = {'password': {'write_only': True}}
+        fields = ['email', 'first_name', 'last_name']
+
+class RegisterSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True)
+    role_id = serializers.PrimaryKeyRelatedField(queryset=Role.objects.all())
+
+    class Meta:
+        model = User
+        fields = ['username', 'password', 'first_name', 'last_name', 'role_id']  # Cambiado 'email' a 'username'
 
     def create(self, validated_data):
-        user = User(
-            name=validated_data['name'],
-            email=validated_data['email']
+        role_id = validated_data.pop('role_id', None)
+        user = User.objects.create_user(
+            username=validated_data['username'],  # Cambiado 'email' a 'username'
+            password=validated_data['password'],
+            first_name=validated_data.get('first_name', ''),
+            last_name=validated_data.get('last_name', ''),
         )
-        user.set_password(validated_data['password'])  
-        user.save()
+        if role_id:
+            user.role_id = role_id
+            user.save()
         return user
 
-    def update(self, instance, validated_data):
-        instance.name = validated_data.get('name', instance.name)
-        instance.email = validated_data.get('email', instance.email)
-        password = validated_data.get('password', None)
-        if password:
-            instance.set_password(password)  
-        instance.save()
-        return instance
+class RoleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Role
+        fields = '__all__'

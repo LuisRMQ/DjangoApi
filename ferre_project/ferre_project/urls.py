@@ -16,17 +16,14 @@ Including another URLconf
 """
 
 
-from django.contrib import admin
-from django.urls import path, include
-
-from rest_framework_simplejwt.views import (
-    TokenObtainPairView,
-    TokenRefreshView,
-)
+from django.urls import path
+from rest_framework_simplejwt.views import TokenRefreshView
+from ferreteria.api.views import RegisterView, RoleView, CustomTokenObtainPairView
 
 urlpatterns = [
-    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('admin/', admin.site.urls),
-    path('api/',include('ferreteria.api.urls'))
+    path('register/', RegisterView.as_view(), name='register'),
+    path('login/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('roles/', RoleView.as_view(), name='roles'),
 ]
+
