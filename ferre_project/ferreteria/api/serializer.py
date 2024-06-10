@@ -3,7 +3,7 @@ from ferreteria.models import User
 from django.contrib.auth import get_user_model
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response 
-from ferreteria.models import Role
+from ferreteria.models import Role, Product
 
 User = get_user_model()
 
@@ -18,12 +18,12 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['username', 'password', 'first_name', 'last_name', 'role_id']  # Cambiado 'email' a 'username'
+        fields = ['username', 'password', 'first_name', 'last_name', 'role_id']  
 
     def create(self, validated_data):
         role_id = validated_data.pop('role_id', None)
         user = User.objects.create_user(
-            username=validated_data['username'],  # Cambiado 'email' a 'username'
+            username=validated_data['username'], 
             password=validated_data['password'],
             first_name=validated_data.get('first_name', ''),
             last_name=validated_data.get('last_name', ''),
@@ -37,3 +37,8 @@ class RoleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Role
         fields = '__all__'
+
+class ProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product
+        fields = '__all__'        
