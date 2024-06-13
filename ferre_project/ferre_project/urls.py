@@ -14,9 +14,24 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
-from django.urls import path
+
+
+from django.urls import path, include
+from rest_framework_simplejwt.views import TokenRefreshView
+from ferreteria.api.views import RegisterView, RoleView, CustomTokenObtainPairView,ProductList,CategorieList,SupplierList
+from rest_framework.routers import DefaultRouter
+
+
+
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('api/productos/', ProductList.as_view(), name='product-list'),
+
+    path('register/', RegisterView.as_view(), name='register'),
+    path('login/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('roles/', RoleView.as_view(), name='roles'),
+    path('api/proveedores',SupplierList.as_view(), name="proveedores-list"),
+    path('api/categorias',CategorieList.as_view(), name="categories-list"),
 ]
+
