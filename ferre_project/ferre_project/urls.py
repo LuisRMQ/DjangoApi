@@ -18,7 +18,7 @@ Including another URLconf
 
 from django.urls import path, include
 from rest_framework_simplejwt.views import TokenRefreshView
-from ferreteria.api.views import RegisterView, RoleView, CustomTokenObtainPairView,ProductList,CategorieList,SupplierList
+from ferreteria.api.views import RegisterView, RoleView, CustomTokenObtainPairView,ProductList,CategorieList,SupplierList,UserListCreate, UserRetrieveUpdateDestroy
 from rest_framework.routers import DefaultRouter
 
 
@@ -26,14 +26,15 @@ from rest_framework.routers import DefaultRouter
 
 urlpatterns = [
     path('api/productos/', ProductList.as_view(), name='product-list'),
+    path('api/productos/<int:pk>/',ProductList.as_view(), name="product-detail"),
     path('register/', RegisterView.as_view(), name='register'),
     path('login/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('roles/', RoleView.as_view(), name='roles'),
-
+    path('users/', UserListCreate.as_view(), name='user-list-create'),
+    path('users/<int:pk>/', UserRetrieveUpdateDestroy.as_view(), name='user-retrieve-update-destroy'),
     path('api/categorias',CategorieList.as_view(), name="categories-list"),
     path('api/categorias/<int:pk>/',CategorieList.as_view(), name="categories-detail"),
-
     path('api/proveedores/', SupplierList.as_view(), name="proveedores-list"),
     path('api/proveedores/<int:pk>/', SupplierList.as_view(), name='proveedores-detail'),   
 ]
