@@ -85,6 +85,18 @@ class Supplier(models.Model):
     def __str__(self):
         return self.name
 
+
+class Employee(models.Model):
+    employee_id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=150)
+    email = models.EmailField(unique=True)
+    phone = models.CharField(max_length=20)
+    department = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
+
+
 class Product(models.Model):
     id_product = models.AutoField(primary_key=True, db_column='id_product')
     name = models.CharField(max_length=100)
@@ -103,7 +115,7 @@ class Sale(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     customer = models.CharField(max_length=255)
     total = models.DecimalField(max_digits=10, decimal_places=2)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sales')
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='sales')
 
     def __str__(self):
         return f"Sale {self.sale_id} - {self.customer} - {self.date}"

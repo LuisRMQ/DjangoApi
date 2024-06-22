@@ -3,7 +3,7 @@ from ferreteria.models import User
 from django.contrib.auth import get_user_model
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response 
-from ferreteria.models import Role, Product, Category, Supplier,Sale, SaleDetail
+from ferreteria.models import Role, Product, Category, Supplier,Sale, SaleDetail,Employee
 
 User = get_user_model()
 
@@ -60,15 +60,15 @@ class SaleDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = SaleDetail
         fields = ['detail_id', 'sale', 'product', 'quantity', 'unit_price']
-        read_only_fields = ['detail_id', 'sale']  # Hace que 'sale' sea de solo lectura
+        read_only_fields = ['detail_id', 'sale']  
 
 class SaleSerializer(serializers.ModelSerializer):
     details = SaleDetailSerializer(many=True)
 
     class Meta:
         model = Sale
-        fields = ['sale_id', 'date', 'customer', 'total', 'user', 'details']
-        read_only_fields = ['sale_id', 'date']  # Hace que 'sale_id' y 'date' sean de solo lectura
+        fields = ['sale_id', 'date', 'customer', 'total', 'employee', 'details']
+        read_only_fields = ['sale_id', 'date'] 
 
     def create(self, validated_data):
         details_data = validated_data.pop('details')
@@ -83,7 +83,7 @@ class SaleSerializer(serializers.ModelSerializer):
         details_data = validated_data.pop('details', [])
         instance.customer = validated_data.get('customer', instance.customer)
         instance.total = validated_data.get('total', instance.total)
-        instance.user = validated_data.get('user', instance.user)
+        instance.employee = validated_data.get('employee', instance.employee)
         instance.save()
 
         instance.details.all().delete()
@@ -91,3 +91,8 @@ class SaleSerializer(serializers.ModelSerializer):
             SaleDetail.objects.create(sale=instance, **detail_data)
 
         return instance
+    
+class EmployeeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Employee
+        fields = '__all__'

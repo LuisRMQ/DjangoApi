@@ -18,7 +18,7 @@ Including another URLconf
 
 from django.urls import path, include
 from rest_framework_simplejwt.views import TokenRefreshView
-from ferreteria.api.views import RegisterView, RoleView, CustomTokenObtainPairView,ProductList,CategorieList,SupplierList,UserListCreate, UserRetrieveUpdateDestroy,SaleListCreate,SaleRetrieveUpdateDestroy
+from ferreteria.api.views import RegisterView, RoleView, CustomTokenObtainPairView,EmployeeRetrieveUpdateDestroy,ProductList,CategorieList,SupplierList,UserListCreate,EmployeeListCreate, UserRetrieveUpdateDestroy,SaleListCreate,SaleRetrieveUpdateDestroy
 from rest_framework.routers import DefaultRouter
 
 
@@ -39,5 +39,7 @@ urlpatterns = [
     path('api/proveedores/<int:pk>/', SupplierList.as_view(), name='proveedores-detail'),   
     path('ventas/', SaleListCreate.as_view(), name='ventas-list-create'),
     path('ventas/<int:pk>/', SaleRetrieveUpdateDestroy.as_view(), name='ventas-detail'),
+    path('employees/', EmployeeListCreate.as_view(), name='employee-list-create'),
+    path('employees/<int:pk>/', EmployeeRetrieveUpdateDestroy.as_view(), name='employee-retrieve-update-destroy'),
 ]
 

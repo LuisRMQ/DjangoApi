@@ -1,7 +1,7 @@
 from rest_framework import viewsets,status
 from rest_framework.permissions import IsAuthenticated
-from ferreteria.models import User, Role,Product, Category,Supplier,Sale
-from ferreteria.api.serializer import UserSerializer , RegisterSerializer , RoleSerializer,ProductSerializer, CategorySerializer, SupplierSerializer,SaleSerializer
+from ferreteria.models import User, Role,Product, Category,Supplier,Sale,Employee
+from ferreteria.api.serializer import UserSerializer , RegisterSerializer , RoleSerializer,ProductSerializer, CategorySerializer, SupplierSerializer,SaleSerializer,EmployeeSerializer
 from rest_framework import generics, permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -158,3 +158,11 @@ class SaleListCreate(generics.ListCreateAPIView):
 class SaleRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     queryset = Sale.objects.all()
     serializer_class = SaleSerializer    
+
+class EmployeeListCreate(generics.ListCreateAPIView):
+    queryset = Employee.objects.all()
+    serializer_class = EmployeeSerializer
+
+class EmployeeRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Employee.objects.all()
+    serializer_class = EmployeeSerializer
