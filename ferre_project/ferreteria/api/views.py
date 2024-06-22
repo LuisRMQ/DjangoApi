@@ -1,7 +1,7 @@
 from rest_framework import viewsets,status
 from rest_framework.permissions import IsAuthenticated
-from ferreteria.models import User, Role,Product, Category,Supplier
-from ferreteria.api.serializer import UserSerializer , RegisterSerializer , RoleSerializer,ProductSerializer, CategorySerializer, SupplierSerializer
+from ferreteria.models import User, Role,Product, Category,Supplier,Sale
+from ferreteria.api.serializer import UserSerializer , RegisterSerializer , RoleSerializer,ProductSerializer, CategorySerializer, SupplierSerializer,SaleSerializer
 from rest_framework import generics, permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -150,3 +150,11 @@ class SupplierList(APIView):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+class SaleListCreate(generics.ListCreateAPIView):
+    queryset = Sale.objects.all()
+    serializer_class = SaleSerializer
+
+class SaleRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Sale.objects.all()
+    serializer_class = SaleSerializer    
