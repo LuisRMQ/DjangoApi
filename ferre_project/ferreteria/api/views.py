@@ -1,7 +1,7 @@
 from rest_framework import viewsets,status
 from rest_framework.permissions import IsAuthenticated
-from ferreteria.models import User, Role,Product, Category,Supplier,Sale,Employee
-from ferreteria.api.serializer import UserSerializer , RegisterSerializer , RoleSerializer,ProductSerializer, CategorySerializer, SupplierSerializer,SaleSerializer,EmployeeSerializer
+from ferreteria.models import User, Role,Product, Category,Supplier,Sale,Employee,Purchase,Customer
+from ferreteria.api.serializer import UserSerializer ,CustomerSerializer,PurchaseSerializer, RegisterSerializer , RoleSerializer,ProductSerializer, CategorySerializer, SupplierSerializer,SaleSerializer,EmployeeSerializer
 from rest_framework import generics, permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -29,7 +29,6 @@ class UserRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
 class RoleView(generics.ListCreateAPIView):
     queryset = Role.objects.all()
     serializer_class = RoleSerializer
-    permission_classes = [permissions.IsAuthenticated]
 
 class CustomTokenObtainPairView(TokenObtainPairView):
     def post(self, request, *args, **kwargs):
@@ -166,3 +165,20 @@ class EmployeeListCreate(generics.ListCreateAPIView):
 class EmployeeRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     queryset = Employee.objects.all()
     serializer_class = EmployeeSerializer
+
+
+class CustomerListCreate(generics.ListCreateAPIView):
+    queryset = Customer.objects.all()
+    serializer_class = CustomerSerializer
+
+class CustomerRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Customer.objects.all()
+    serializer_class = CustomerSerializer    
+
+class PurchaseListCreateAPIView(generics.ListCreateAPIView):
+    queryset = Purchase.objects.all()
+    serializer_class = PurchaseSerializer
+
+class PurchaseDetailAPIView(generics.RetrieveAPIView):
+    queryset = Purchase.objects.all()
+    serializer_class = PurchaseSerializer    

@@ -2,8 +2,11 @@ from rest_framework import serializers
 from ferreteria.models import User
 from django.contrib.auth import get_user_model
 from rest_framework.authtoken.models import Token
+from django.db import transaction
+from django.core.exceptions import ValidationError
 from rest_framework.response import Response 
-from ferreteria.models import Role, Product, Category, Supplier,Sale, SaleDetail,Employee
+from ferreteria.models import Role, Customer,Product, Category, Supplier,Sale, SaleDetail,Employee,PurchaseDetail,Purchase
+from django.db.models import F
 
 User = get_user_model()
 
@@ -72,10 +75,29 @@ class SaleSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         details_data = validated_data.pop('details')
-        sale = Sale.objects.create(**validated_data)
+        sale = Sale(**validated_data)
 
-        for detail_data in details_data:
-            SaleDetail.objects.create(sale=sale, **detail_data)
+        with transaction.atomic():
+            try:
+                for detail_data in details_data:
+                    product = detail_data['product']
+                    quantity = detail_data['quantity']
+
+                    if quantity > product.available_quantity:
+                        raise ValidationError(f"No hay suficiente stock para el producto {product.name}. La venta no puede completarse.")
+
+                sale.save()
+
+                for detail_data in details_data:
+                    SaleDetail.objects.create(sale=sale, **detail_data)
+
+                    product = detail_data['product']
+                    quantity = detail_data['quantity']
+                    product.available_quantity -= quantity
+                    product.save()
+
+            except ValidationError as e:
+                raise serializers.ValidationError({'respuesta': str(e)})
 
         return sale
 
@@ -84,11 +106,18 @@ class SaleSerializer(serializers.ModelSerializer):
         instance.customer = validated_data.get('customer', instance.customer)
         instance.total = validated_data.get('total', instance.total)
         instance.employee = validated_data.get('employee', instance.employee)
-        instance.save()
 
-        instance.details.all().delete()
-        for detail_data in details_data:
-            SaleDetail.objects.create(sale=instance, **detail_data)
+        with transaction.atomic():
+            instance.save()
+
+            instance.details.all().delete()
+            for detail_data in details_data:
+                SaleDetail.objects.create(sale=instance, **detail_data)
+
+                product = detail_data['product']
+                quantity = detail_data['quantity']
+                product.available_quantity -= quantity
+                product.save()
 
         return instance
     
@@ -96,3 +125,77 @@ class EmployeeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Employee
         fields = '__all__'
+
+
+class CustomerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Customer
+        fields = '__all__'
+
+
+class PurchaseDetailSerializer(serializers.ModelSerializer):
+    product = serializers.PrimaryKeyRelatedField(queryset=Product.objects.all())
+
+    class Meta:
+        model = PurchaseDetail
+        fields = ['detail_id', 'purchase', 'product', 'quantity', 'unit_price']
+        read_only_fields = ['detail_id', 'purchase']  
+
+class PurchaseSerializer(serializers.ModelSerializer):
+    details = PurchaseDetailSerializer(many=True)
+
+    class Meta:
+        model = Purchase
+        fields = ['purchase_id', 'date', 'supplier', 'total', 'details']
+        read_only_fields = ['purchase_id', 'date']
+
+    def create(self, validated_data):
+        details_data = validated_data.pop('details')
+        
+        with transaction.atomic():
+            try:
+                purchase = Purchase.objects.create(**validated_data)
+
+                for detail_data in details_data:
+                    product = detail_data['product']
+                    quantity = detail_data['quantity']
+
+                    if quantity <= 0:
+                        raise ValidationError("La cantidad debe ser mayor que cero.")
+
+
+                    PurchaseDetail.objects.create(purchase=purchase, **detail_data)
+
+                    product.available_quantity = F('available_quantity') + quantity
+                    product.save()
+
+            except ValidationError as e:
+                raise serializers.ValidationError({'respuesta': str(e)})
+
+        return purchase
+
+    def update(self, instance, validated_data):
+        details_data = validated_data.pop('details', [])
+        instance.supplier = validated_data.get('supplier', instance.supplier)
+        instance.total = validated_data.get('total', instance.total)
+
+        with transaction.atomic():
+            instance.save()
+
+            instance.details.all().delete()
+            for detail_data in details_data:
+                product = detail_data['product']
+                quantity = detail_data['quantity']
+
+                if quantity <= 0:
+                    raise ValidationError("La cantidad debe ser mayor que cero.")
+
+                if quantity > product.available_quantity:
+                    raise ValidationError(f"No hay suficiente stock para el producto {product.name}. La compra no puede completarse.")
+
+                PurchaseDetail.objects.create(purchase=instance, **detail_data)
+
+                product.available_quantity = F('available_quantity') + quantity
+                product.save()
+
+        return instance        

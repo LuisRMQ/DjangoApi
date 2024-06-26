@@ -18,7 +18,7 @@ Including another URLconf
 
 from django.urls import path, include
 from rest_framework_simplejwt.views import TokenRefreshView
-from ferreteria.api.views import RegisterView, RoleView, CustomTokenObtainPairView,EmployeeRetrieveUpdateDestroy,ProductList,CategorieList,SupplierList,UserListCreate,EmployeeListCreate, UserRetrieveUpdateDestroy,SaleListCreate,SaleRetrieveUpdateDestroy
+from ferreteria.api.views import RegisterView,CustomerListCreate,CustomerRetrieveUpdateDestroy, RoleView,PurchaseDetailAPIView, PurchaseListCreateAPIView,CustomTokenObtainPairView,EmployeeRetrieveUpdateDestroy,ProductList,CategorieList,SupplierList,UserListCreate,EmployeeListCreate, UserRetrieveUpdateDestroy,SaleListCreate,SaleRetrieveUpdateDestroy
 from rest_framework.routers import DefaultRouter
 
 
@@ -40,6 +40,11 @@ urlpatterns = [
     path('ventas/', SaleListCreate.as_view(), name='ventas-list-create'),
     path('ventas/<int:pk>/', SaleRetrieveUpdateDestroy.as_view(), name='ventas-detail'),
     path('employees/', EmployeeListCreate.as_view(), name='employee-list-create'),
+    path('purchases/', PurchaseListCreateAPIView.as_view(), name='purchase-list-create'),
+    path('purchases/<int:pk>/', PurchaseDetailAPIView.as_view(), name='purchase-detail'),
     path('employees/<int:pk>/', EmployeeRetrieveUpdateDestroy.as_view(), name='employee-retrieve-update-destroy'),
+    path('customers/', CustomerListCreate.as_view(), name='customer-list-create'),
+    path('customers/<int:pk>/', CustomerRetrieveUpdateDestroy.as_view(), name='customer-retrieve-update-destroy'),
+
 ]
 
