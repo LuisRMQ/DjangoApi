@@ -23,9 +23,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-*zmc9!+e7v&*_h@s@0gz-s2@10#j=oj4+*6-(tm%xs4=*ewk%-'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
-ALLOWED_HOSTS = ['165.227.119.16']
+
+DEBUG = False
+
+#IP DEL SERVER '165.227.119.16'
+ALLOWED_HOSTS = ['*']
+
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 # Application definition
@@ -131,8 +135,10 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-CORS_ALLOW_ALL_ORIGINS = True
-CORS_ALLOW_CREDENTIALS = True
+
+#ESTO SE DESCOMENTA AL PONERLO EN EL SERVER
+#CORS_ALLOW_ALL_ORIGINS = True
+#CORS_ALLOW_CREDENTIALS = True
 
 ## instalar python -m pip install Pillow epara usar imagenes
 

@@ -132,7 +132,9 @@ class CustomerSerializer(serializers.ModelSerializer):
         model = Customer
         fields = '__all__'
 
-
+#Se crean tabla detalle compra, para almacenar el detalle, se activan signals para manejar el incremento
+# de productos al hacer la compra, al momento de que se detecte un evento de creacion de este modelo
+#se activa el signal para poder hacer la suma del inventario.
 class PurchaseDetailSerializer(serializers.ModelSerializer):
     product = serializers.PrimaryKeyRelatedField(queryset=Product.objects.all())
 
