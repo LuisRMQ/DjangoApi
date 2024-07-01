@@ -46,7 +46,6 @@ class ProductSerializer(serializers.ModelSerializer):
         model = Product
         fields = '__all__'        
 
-
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
@@ -125,7 +124,6 @@ class EmployeeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Employee
         fields = '__all__'
-
 
 class CustomerSerializer(serializers.ModelSerializer):
     class Meta:

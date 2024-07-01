@@ -1,6 +1,6 @@
 from rest_framework import viewsets,status
 from rest_framework.permissions import IsAuthenticated
-from ferreteria.models import User, Role,Product, Category,Supplier,Sale,Employee,Purchase,Customer
+from ferreteria.models import User, Role,Product, Category,Supplier,Sale,Employee,Purchase,Customer, SaleDetail, PurchaseDetail
 from ferreteria.api.serializer import UserSerializer ,CustomerSerializer,PurchaseSerializer, RegisterSerializer , RoleSerializer,ProductSerializer, CategorySerializer, SupplierSerializer,SaleSerializer,EmployeeSerializer
 from rest_framework import generics, permissions
 from rest_framework.response import Response
@@ -114,7 +114,32 @@ class CategorieList(APIView):
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
        
-    
+class SupplierTransactionsAPIView(APIView):
+     def get(self, request, supplier_id):
+        try:
+            supplier = get_object_or_404(Supplier, id_supplier=supplier_id)
+            products = Product.objects.filter(supplier=supplier).select_related('category')
+            product_data = [
+                {
+                    'id': product.id_product,
+                    'name': product.name,
+                    'description': product.description,
+                    'price': product.price,
+                    'available_quantity': product.available_quantity,
+                    'category': product.category.name if product.category else 'Sin categoría'
+                }
+                for product in products
+            ]
+
+            return Response({
+                'products': product_data
+            })
+
+        except Exception as e:
+            return Response({
+                'error': str(e)
+            }, status=500)
+
 class SupplierList(APIView):
     def get(self, request, pk=None, *args, **kwargs):
         if pk is None:
