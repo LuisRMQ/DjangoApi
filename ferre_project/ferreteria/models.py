@@ -118,6 +118,7 @@ class Product(models.Model):
     id_product = models.AutoField(primary_key=True, db_column='id_product')
     name = models.CharField(max_length=100)
     description = models.TextField()
+    cost =models.DecimalField(max_digits=10, decimal_places=2)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     available_quantity = models.IntegerField(default=0)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
