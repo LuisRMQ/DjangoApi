@@ -1,3 +1,4 @@
+from django.utils import timezone
 from django.db import models, transaction
 from django.contrib.auth.hashers import make_password, check_password
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
@@ -72,7 +73,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 class Category(models.Model):
     id_categorie = models.AutoField(primary_key=True, db_column='id_categorie')
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
     description = models.TextField()
 
     def __str__(self):
@@ -91,7 +92,7 @@ class Supplier(models.Model):
     def __str__(self):
         return self.name
 
-
+#Checador Asistencia
 class Employee(models.Model):
     employee_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=150)
@@ -101,6 +102,24 @@ class Employee(models.Model):
 
     def __str__(self):
         return self.name
+    
+class Card(models.Model):
+    card_id = models.AutoField(primary_key=True)
+    serial_number = models.CharField(max_length=50, unique=True)
+    assigned_to = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True, blank=True)
+
+    def __str__(self):
+        return self.serial_number    
+
+
+class Attendance(models.Model):
+    attendance_id = models.AutoField(primary_key=True)
+    timestamp = models.DateTimeField(default=timezone.now)
+    entry_type = models.CharField(max_length=10)  
+    serial_tag = models.CharField(max_length=50)
+
+    def __str__(self):
+        return f"{self.serial_tag} - {self.timestamp} ({self.entry_type})"
 
 class Customer(models.Model):
     customer_id = models.AutoField(primary_key=True)

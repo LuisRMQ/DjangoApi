@@ -1,13 +1,18 @@
 from rest_framework import viewsets,status
 from rest_framework.permissions import IsAuthenticated
-from ferreteria.models import User, Role,Product, Category,Supplier,Sale,Employee,Purchase,Customer, SaleDetail, PurchaseDetail
-from ferreteria.api.serializer import UserSerializer ,CustomerSerializer,PurchaseSerializer, RegisterSerializer , RoleSerializer,ProductSerializer, CategorySerializer, SupplierSerializer,SaleSerializer,EmployeeSerializer
+from ferreteria.models import User, Role,Product,Card, Attendance,Category,Supplier,Sale,Employee,Purchase,Customer, SaleDetail, PurchaseDetail
+from ferreteria.api.serializer import UserSerializer ,CardSerializer,AttendanceSerializer,CustomerSerializer,PurchaseSerializer, RegisterSerializer , RoleSerializer,ProductSerializer, CategorySerializer, SupplierSerializer,SaleSerializer,EmployeeSerializer
 from rest_framework import generics, permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
+
+
+
+
+
 
 User = get_user_model()
 
@@ -192,6 +197,14 @@ class EmployeeRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = EmployeeSerializer
 
 
+# class ReceiveAttendanceAPIView(APIView):
+#     def post(self, request):
+#         serializer = AttendanceSerializer(data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data, status=status.HTTP_201_CREATED)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 class CustomerListCreate(generics.ListCreateAPIView):
     queryset = Customer.objects.all()
     serializer_class = CustomerSerializer
@@ -207,3 +220,19 @@ class PurchaseListCreateAPIView(generics.ListCreateAPIView):
 class PurchaseDetailAPIView(generics.RetrieveAPIView):
     queryset = Purchase.objects.all()
     serializer_class = PurchaseSerializer    
+
+class AttendanceListCreate(generics.ListCreateAPIView):
+    queryset = Attendance.objects.all()
+    serializer_class = AttendanceSerializer
+
+class AttendanceRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Attendance.objects.all()
+    serializer_class = AttendanceSerializer   
+
+class CardListCreate(generics.ListCreateAPIView):
+    queryset = Card.objects.all()
+    serializer_class = CardSerializer
+
+class CardRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Card.objects.all()
+    serializer_class = CardSerializer   

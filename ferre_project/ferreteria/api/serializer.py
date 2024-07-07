@@ -5,7 +5,7 @@ from rest_framework.authtoken.models import Token
 from django.db import transaction
 from django.core.exceptions import ValidationError
 from rest_framework.response import Response 
-from ferreteria.models import Role, Customer,Product, Category, Supplier,Sale, SaleDetail,Employee,PurchaseDetail,Purchase
+from ferreteria.models import Role, Customer,Attendance,Card,Product, Category, Supplier,Sale, SaleDetail,Employee,PurchaseDetail,Purchase
 from django.db.models import F
 
 User = get_user_model()
@@ -130,6 +130,16 @@ class CustomerSerializer(serializers.ModelSerializer):
         model = Customer
         fields = '__all__'
 
+
+class AttendanceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Attendance
+        fields = '__all__'
+
+class CardSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Card
+        fields = '__all__'
 #Se crean tabla detalle compra, para almacenar el detalle, se activan signals para manejar el incremento
 # de productos al hacer la compra, al momento de que se detecte un evento de creacion de este modelo
 #se activa el signal para poder hacer la suma del inventario.
