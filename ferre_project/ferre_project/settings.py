@@ -86,7 +86,7 @@ WSGI_APPLICATION = 'ferre_project.wsgi.application'
 DATABASES = {
      'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'ferreteriadbtest',
+        'NAME': 'ferreteriache',
         'USER': 'postgres',
         'PASSWORD': 'Killers13',
         'HOST': 'localhost',
