@@ -18,15 +18,15 @@ Including another URLconf
 
 from django.urls import path, include
 from rest_framework_simplejwt.views import TokenRefreshView
-from ferreteria.api.views import RegisterView,CardRetrieveUpdateDestroy,CardListCreate,AttendanceRetrieveUpdateDestroy,AttendanceListCreate,SupplierTransactionsAPIView,CustomerListCreate,CustomerRetrieveUpdateDestroy, RoleView,PurchaseDetailAPIView, PurchaseListCreateAPIView,CustomTokenObtainPairView,EmployeeRetrieveUpdateDestroy,ProductList,CategorieList,SupplierList,UserListCreate,EmployeeListCreate, UserRetrieveUpdateDestroy,SaleListCreate,SaleRetrieveUpdateDestroy
+from ferreteria.api.views import RegisterView,EmployesAttendanceAPIView,CardRetrieveUpdateDestroy,CardListCreate,AttendanceRetrieveUpdateDestroy,AttendanceListCreate,SupplierTransactionsAPIView,CustomerListCreate,CustomerRetrieveUpdateDestroy, RoleView,PurchaseDetailAPIView, PurchaseListCreateAPIView,CustomTokenObtainPairView,EmployeeRetrieveUpdateDestroy,ProductList,CategorieList,SupplierList,UserListCreate,EmployeeListCreate, UserRetrieveUpdateDestroy,SaleListCreate,SaleRetrieveUpdateDestroy
 from rest_framework.routers import DefaultRouter
 
 
 
 
 urlpatterns = [
-    path('api/asitencia/', AttendanceListCreate.as_view(), name='attendance-list'),
-    path('api/asitencia/<int:pk>/', AttendanceRetrieveUpdateDestroy.as_view(), name='attendance-detail'),
+    path('api/asistencia/', AttendanceListCreate.as_view(), name='attendance-list'),
+    path('api/asistencia/<int:pk>/', AttendanceRetrieveUpdateDestroy.as_view(), name='attendance-detail'),
     path('api/tarjetas/', CardListCreate.as_view(), name='card-list'),
     path('api/tarjetas/<int:pk>/', CardRetrieveUpdateDestroy.as_view(), name='card-detail'),
     path('api/productos/', ProductList.as_view(), name='product-list'),
@@ -49,6 +49,7 @@ urlpatterns = [
     path('employees/<int:pk>/', EmployeeRetrieveUpdateDestroy.as_view(), name='employee-retrieve-update-destroy'),
     path('customers/', CustomerListCreate.as_view(), name='customer-list-create'),
     path('customers/<int:pk>/', CustomerRetrieveUpdateDestroy.as_view(), name='customer-retrieve-update-destroy'),
+    path('attendance/<int:employee_id>/transactions/', EmployesAttendanceAPIView.as_view(), name='attendance-transactions'),
     path('suppliers/<int:supplier_id>/transactions/', SupplierTransactionsAPIView.as_view(), name='supplier-transactions'),
 ]
 
