@@ -145,6 +145,38 @@ class SupplierTransactionsAPIView(APIView):
                 'error': str(e)
             }, status=500)
 
+
+class EmployesAttendanceAPIView(APIView):
+     def get(self, request, employee_id):
+        try:
+            employee = get_object_or_404(Employee, employee_id=employee_id)
+
+            card = get_object_or_404(Card, assigned_to=employee)
+
+            attendances = Attendance.objects.filter(serial_tag=card.serial_number)
+
+            attendance_data = [
+                {
+                    'timestamp': attendance.timestamp,
+                    'entry_type': attendance.entry_type,
+                }
+                for attendance in attendances
+            ]
+
+            employee_data = {
+                'name': employee.name,
+                'serial_number': card.serial_number,
+                'attendances': attendance_data
+            }
+
+            return Response(employee_data, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            return Response({
+                'error': str(e)
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
 class SupplierList(APIView):
     def get(self, request, pk=None, *args, **kwargs):
         if pk is None:
